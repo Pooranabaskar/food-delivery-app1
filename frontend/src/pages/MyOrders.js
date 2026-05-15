@@ -12,7 +12,7 @@ function MyOrders() {
     API.get('/orders/my')
       .then(res => setOrders(res.data.orders))
       .finally(() => setLoading(false));
-  }, []);
+  }, [navigate]);
 
   const statusColor = {
     PENDING: '#f39c12', CONFIRMED: '#3498db', PREPARING: '#9b59b6',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Menu from './pages/Menu';
@@ -9,7 +9,7 @@ import Navbar from './components/Navbar';
 import './App.css';
 
 function App() {
-  const isLoggedIn = !!localStorage.getItem('token');
+  //const isLoggedIn = !!localStorage.getItem('token');
 
   return (
     <BrowserRouter>
