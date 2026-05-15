@@ -26,7 +26,7 @@ function Tracking() {
       .finally(() => setLoading(false));
 
     // Connect WebSocket and watch this order
-    const socket = io('http://localhost:5000');
+    const socket = io('food-delivery-app1-production.up.railway.app');
     socket.emit('watch:order', id);
 
     // Listen for live updates
