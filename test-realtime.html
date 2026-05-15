@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🔴 Live Order Tracker</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+    h1 { color: #e23744; }
+    input, button { padding: 10px; margin: 5px; font-size: 16px; }
+    button { background: #e23744; color: white; border: none; cursor: pointer; border-radius: 5px; }
+    #log { background: #f5f5f5; padding: 20px; border-radius: 10px; margin-top: 20px; min-height: 200px; }
+    .update { padding: 10px; margin: 5px 0; background: white; border-left: 4px solid #e23744; border-radius: 3px; }
+    .connected { color: green; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🍕 Live Order Tracker</h1>
+
+  <div>
+    <input type="number" id="orderId" placeholder="Enter Order ID" value="1" />
+    <button onclick="watchOrder()">👀 Track Order</button>
+    <button onclick="stopWatching()">✋ Stop Tracking</button>
+  </div>
+
+  <div id="log">
+    <p>Enter an order ID and click Track Order...</p>
+  </div>
+
+  <script>
+    // Connect to your server
+    const socket = io('http://localhost:3000');
+    let currentOrderId = null;
+
+    // Connection events
+    socket.on('connect', () => {
+      addLog('✅ Connected to server! Socket ID: ' + socket.id, 'connected');
+    });
+
+    socket.on('disconnect', () => {
+      addLog('❌ Disconnected from server');
+    });
+
+    // Start watching an order
+    function watchOrder() {
+      const orderId = document.getElementById('orderId').value;
+      if (!orderId) return alert('Enter an order ID!');
+
+      currentOrderId = orderId;
+      socket.emit('watch:order', orderId);
+      addLog(`👀 Started tracking order #${orderId}...`);
+    }
+
+    // Stop watching
+    function stopWatching() {
+      if (currentOrderId) {
+        socket.emit('unwatch:order', currentOrderId);
+        addLog(`✋ Stopped tracking order #${currentOrderId}`);
+        currentOrderId = null;
+      }
+    }
+
+    // Listen for confirmation
+    socket.on('watching', (data) => {
+      addLog(`📡 ${data.message}`);
+    });
+
+    // 🔴 THIS IS THE MAGIC — real-time order updates!
+    socket.on('order:updated', (data) => {
+      addLog(`
+        🔔 ORDER UPDATE!
+        Status: ${data.status}
+        Message: ${data.message}
+        Time: ${new Date(data.timestamp).toLocaleTimeString()}
+      `);
+    });
+
+    function addLog(message, className = '') {
+      const log = document.getElementById('log');
+      const div = document.createElement('div');
+      div.className = `update ${className}`;
+      div.innerText = message;
+      log.prepend(div); // Add to top
+    }
+  </script>
+</body>
+</html>
