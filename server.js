@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');        // Need this for WebSocket
 const { Server } = require('socket.io');
-const cors = require('cors'); 
+
 const db = require('./db');
 const authRoutes = require('./auth');
 const orderRoutes = require('./orders');
@@ -9,6 +9,8 @@ const trackingRoutes = require('./tracking');
 const { initSocket } = require('./socket');
 const { protect } = require('./middleware');
 require('dotenv').config();
+
+const cors = require('cors'); 
 
 const app = express();
 
