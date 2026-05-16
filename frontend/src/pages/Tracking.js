@@ -38,7 +38,8 @@ function Tracking() {
 
     // Cleanup on page leave
     return () => socket.disconnect();
-  }, [id]);
+    
+    }, [id]);
 
   const currentStep = statusSteps.indexOf(status);
 

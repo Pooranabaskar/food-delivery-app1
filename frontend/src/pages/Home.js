@@ -18,6 +18,7 @@ function Home() {
 
   return (
     <div>
+      console.log(restaurant_name);
       <h2 style={{ margin: '24px 0 16px' }}>🍽️ Restaurants Near You</h2>
       <div className="grid">
         {restaurants.map(r => (
