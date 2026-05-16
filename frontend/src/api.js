@@ -3,8 +3,6 @@ import axios from 'axios';
 // Your backend URL
 const API = axios.create({
   baseURL: 'https://food-delivery-app1-production.up.railway.app',
-
- 
 });
 
 // Automatically attach token to every request

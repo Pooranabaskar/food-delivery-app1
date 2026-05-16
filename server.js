@@ -10,17 +10,20 @@ const { initSocket } = require('./socket');
 const { protect } = require('./middleware');
 require('dotenv').config();
 
-const cors = require('cors'); 
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
+
+// Configure CORS origin from environment variable
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
 
 // Create HTTP server (WebSocket runs on same server)
 const server = http.createServer(app);
 
-
 const io = new Server(server, {
   cors: {
-    origin: '*', // We'll restrict this after deployment
+    origin: corsOrigin,
     methods: ['GET', 'POST', 'PUT']
   }
 });
@@ -28,13 +31,12 @@ const io = new Server(server, {
 // Initialize WebSocket
 initSocket(server);
 
-app.use(cors());
+app.use(cors({
+  origin: corsOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 app.use(express.json());
 app.set('io', io);
-
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
 
 // ── Routes ──
 app.use('/auth', authRoutes);
